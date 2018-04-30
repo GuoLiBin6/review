@@ -82,6 +82,12 @@ app.all('*', function(req, res, next) {
     next();
 });
 
+//为了能解析post参数
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+	extended:true
+}));
+
 //使用路由
 app.use('/',index);
 
@@ -89,9 +95,8 @@ app.use('/login',login);
 app.use('/users',users);
 app.use('/register',register);
 
-app.use(bodyParser.urlencoded({
-	extended:true
-}));
+
+
 
 
 //静态文件管理

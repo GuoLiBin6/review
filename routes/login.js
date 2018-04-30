@@ -1,40 +1,59 @@
 var express = require('express');
 var router = express.Router();
-
+var  mysql  =  require('mysql');
 /* GET users listing. */
-router.get('/', function(req, res) {
-	res.send('login');
-	
-	console.log('login');
-//var mysql = require('mysql');        
-//	    
-//	//创建连接    
-//	var client = mysql.createConnection({    
-//	  "host":"127.0.0.1",
-//	  "port":"3306",
-//	  "user":"root",
-//	  "password":""
-//	});    
-//	  
-//	var database = 'mysql';
-//	var table = 'table';
-//	
-//	  
-//	client.query("use " + database);  
-//	  
-//	client.query(    
-//	  'select * from '+ table,    
-//	  function selectCb(errs, results, fields) {    
-//	    if (errs) {    
-//	      throw err;    
-//	    }    
-//	        
-//	      if(results)  
-//	      {  
-//	          console.log(results);
-//	      }      
-//	       
-//	  });   
-});
+router.post('/', function (req, res) {
+	//获得用户名和密码
+	var userName = req.body.userName;
+	var password = req.body.password;
+	//定义数据库连接池
+	let pool = mysql.createPool({
+		host: 'localhost',
+		user: 'root',
+		password: '',
+		database: 'yuedong'
+	});
+	// pool.getConnection(function (err, connection) {
+	// 	connection.query('select password from userInfo where userName = "'+userName+'"', function (err, result) {
+	// 		if (err) {
+	// 			throw err;
+	// 			res.send('5');//5数据库连接出错
+	// 		} else {
+	// 			console.log(result)
+	// 			if(result == []){
+	// 				res.send('0');//0没有此用户名
+	// 			}
+	// 			else if(result[0].password != password){
+	// 				res.send('2');//2密码错误
+	// 			}else if(result[0].password == password){
+	// 				res.send('1');//1成功登录
+	// 			}
+	// 		}
+	// 	});
 
+	// 	connection.release();
+	// });
+	pool.getConnection(function (err, connection) {
+		connection.query('select * from userInfo', function (err, result) {
+			if (err) {
+				throw err;
+				res.send('5');//5数据库连接出错
+			} else {
+				for (var i = 0;i<result.length;i++){
+					if(result[i].userName == userName && result[i].password == password){
+						res.send('1');
+						return;
+					}else if(result[i].userName == userName){
+						res.send('2');
+						return;
+					}
+				}
+				res.send('0');
+				return;
+			}
+		});
+
+		connection.release();
+	});
+});
 module.exports = router;
