@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var  mysql  =  require('mysql');
+var method = require('./method.js');
 /* GET users listing. */
 router.post('/', function (req, res) {
 	//获得用户名和密码
 	var userName = req.body.userName;
-	var password = req.body.password;
+	var password = method.md5s(req.body.password);
 	//定义数据库连接池
 	let pool = mysql.createPool({
 		host: 'localhost',
@@ -39,13 +40,17 @@ router.post('/', function (req, res) {
 				throw err;
 				res.send('5');//5数据库连接出错
 			} else {
+				
+				
 				for (var i = 0;i<result.length;i++){
-					if(result[i].userName == userName && result[i].password == password){
-						res.send('1');
-						return;
-					}else if(result[i].userName == userName){
-						res.send('2');
-						return;
+					if( result[i].telNumber == userName || result[i].userName == userName ){
+						if(result[i].password == password){
+							res.send('1');
+							return;
+						}else{
+							res.send('2');
+							return;
+						}
 					}
 				}
 				res.send('0');
