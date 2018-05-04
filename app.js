@@ -72,6 +72,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
 var register = require('./routes/register');
+var mine = require('./routes/mine');
 
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -94,13 +95,14 @@ app.use('/',index);
 app.use('/login',login);
 app.use('/users',users);
 app.use('/register',register);
+app.use('/mine',mine);
 
 
 
 
 
 //静态文件管理
-//app.use(express.static('public'));
+app.use(express.static('public'));
 
 var server = app.listen(8080, function () {
 //var host = server.address().address;

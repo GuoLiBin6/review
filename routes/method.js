@@ -1,5 +1,5 @@
 var crypto = require('crypto');
-
+var fs = require('fs');
 /**
  * 获得本地时间
  * @param  
@@ -28,6 +28,12 @@ let getNowFormatDate = () =>  {
 	    return  currentdate;
 }
 
+/**
+ * 对字符串进行MD5加密
+ * @param  str ：string
+ * @return str : string  已被加密
+ *
+ **/
 let md5s = (str) =>{
 	var crypto = require('crypto');  //加载加密文件
 	var md5 = crypto.createHash('md5');  
@@ -36,7 +42,33 @@ let md5s = (str) =>{
 	return str;
 }
 
+
+let rename = (old_path, new_name, bId) => {
+	var path = './public/upload/';
+	fs.exists(path, function (exists) {
+		if (!exists) {
+			fs.mkdir(path);
+		}
+	});
+	fs.readFile(old_path, function (err, data) {
+		if (err) throw err;
+
+
+		fs.writeFile(path + new_name, data, function (err) {
+			if (err) throw err;
+
+		});
+
+		// Delete the file
+		fs.unlink(old_path, function (err) {
+			if (err) throw err;
+		});
+	});
+}
+
+
 module.exports = {
 	getNowFormatDate,
-	md5s
+	md5s,
+	rename
 }
