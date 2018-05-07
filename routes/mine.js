@@ -4,14 +4,11 @@ var  mysql  =  require('mysql');
 var method = require('./method.js');
 var fromidable = require('formidable');
 var fs=  require('fs');
-// var multer = require('multer');
 var path = require('path');
 
 
-// var myPath = multer({dest:'./public/upload/'});
-// express.use(myPath.any());
 
-/* GET users listing. */
+//我的模块的信息请求
 router.post('/', function (req, res) {
     var userID = req.body.userID;
     let pool = mysql.createPool({
@@ -39,7 +36,7 @@ router.post('/', function (req, res) {
 });
 
 
-//对头像的修改保存
+//修改头像模块
 router.post('/avatar',function(req,res,next){
     var form = new fromidable.IncomingForm();
     //解析req，找到文件
@@ -57,7 +54,7 @@ router.post('/avatar',function(req,res,next){
                 database: 'yuedong'
             });
             pool.getConnection(function (err, connection) {
-                var avatarName = 'http://localhost:8080/upload/'+fileName;
+                var avatarName = 'http://39.107.66.152:8080/upload/'+fileName;
                 var sql = 'update userInfo set avatar=\''+avatarName+'\' where userID = \''+fields.userID+'\'';
                 connection.query(sql, function (err, result) {
                     if (err) {
@@ -73,6 +70,82 @@ router.post('/avatar',function(req,res,next){
             }); 
         }
     });   
+});
+//修改基本信息模块
+router.post('/changMsg',function(req,res){
+    var userID = req.body.userID,
+        // userName = req.boby.userName,
+        telNumber = req.body.telNumber,
+        userSign = req.body.userSign,
+        userName = req.body.userName;
+    console.log(req.body);
+    // console.log(userName)
+        let pool = mysql.createPool({
+            host: 'localhost',
+            user: 'root',
+            password: '',
+            database: 'yuedong'
+        });
+        pool.getConnection(function (err, connection) {
+            var sql = 'update userInfo set userName=\''+userName+'\',telNumber=\''+telNumber+'\', signature=\''+userSign+'\' where userID="'+userID+'"';
+            console.log(sql)
+            connection.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                    res.send('0');//上传失败
+                    return;
+                }else{
+                    console.log(result);
+                    res.send('1');//上传成功
+                    return;
+                }
+            });
+            connection.release();
+        }); 
+});
+
+//修改密码模块
+router.post('/changePwd',function(req,res){
+    var userID = req.body.userID,
+        originPwd = method.md5s(req.body.originPwd),
+        newPwd = method.md5s(req.body.newPwd);
+    console.log(req.body);
+    // console.log(userName)
+        let pool = mysql.createPool({
+            host: 'localhost',
+            user: 'root',
+            password: '',
+            database: 'yuedong'
+        });
+        pool.getConnection(function (err, connection) {
+            var sql = 'select password from userInfo where userID="'+userID+'"';
+            console.log(sql)
+            connection.query(sql, function (err, result) {
+                if (err) {
+                    throw err;
+                    res.send('0');//上传失败
+                    return;
+                }else{
+                    if(result[0].password == originPwd){
+                        connection.query('update userInfo set password=\''+newPwd+'\' where userID = "'+userID+'"',function(err,result){
+                            if(err){
+                                throw err;
+                                res.send('0');
+                                return;
+                            }else{
+                                res.send('1');
+                                return;
+                            }
+                        });
+                    }else{
+                        res.send('2');
+                        return;
+                    }
+                    
+                }
+            });
+            connection.release();
+        }); 
 });
 
 //对
