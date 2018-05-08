@@ -20,7 +20,7 @@ router.post('/', function (req, res) {
 				throw err;
 				res.send('5');//5数据库连接出错
 			} else {
-				for (var i = 0;i<result.length;i++){
+				for (var i = 0;i<result.length;i++){ 
 					if( result[i].telNumber == userName || result[i].userName == userName ){
 						if(result[i].password == password){
 							res.send(result[i].userID);

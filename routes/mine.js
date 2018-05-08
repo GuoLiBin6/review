@@ -22,7 +22,7 @@ router.post('/', function (req, res) {
         connection.query(sql, function (err, result) {
             if (err) {
                 throw err;
-                res.send('0');//上传失败
+                res.send('0');//
                 return;
             }else{
                 console.log(result);
@@ -59,10 +59,10 @@ router.post('/avatar',function(req,res,next){
                 connection.query(sql, function (err, result) {
                     if (err) {
                         throw err;
-                        res.send('0');//上传失败
+                        res.send('0');//修改失败
                         return;
                     }else{
-                        res.send('1');//上传成功
+                        res.send('1');//修改成功
                         return;
                     }
                 });
@@ -72,7 +72,7 @@ router.post('/avatar',function(req,res,next){
     });   
 });
 //修改基本信息模块
-router.post('/changMsg',function(req,res){
+router.post('/changeMsg',function(req,res){
     var userID = req.body.userID,
         // userName = req.boby.userName,
         telNumber = req.body.telNumber,
@@ -92,11 +92,11 @@ router.post('/changMsg',function(req,res){
             connection.query(sql, function (err, result) {
                 if (err) {
                     throw err;
-                    res.send('0');//上传失败
+                    res.send('0');//修改失败
                     return;
                 }else{
                     console.log(result);
-                    res.send('1');//上传成功
+                    res.send('1');//修改成功
                     return;
                 }
             });
@@ -123,7 +123,7 @@ router.post('/changePwd',function(req,res){
             connection.query(sql, function (err, result) {
                 if (err) {
                     throw err;
-                    res.send('0');//上传失败
+                    res.send('5');
                     return;
                 }else{
                     if(result[0].password == originPwd){
