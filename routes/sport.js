@@ -72,6 +72,7 @@ router.post('/addAct', function (req, res) {
 		actPrice = req.body.actPrice,
 		billingMethods = req.body.billingMethods,
 		actExplain = req.body.actExplain,
+		actClass = req.body.actClass,
 		actID ='act' + method.getNowFormatDate(),
 		actStatus = '未开始';
 
@@ -83,8 +84,8 @@ router.post('/addAct', function (req, res) {
 		database: 'yuedong'
 	});
 	pool.getConnection(function (err, connection) {
-		var sql = 'INSERT INTO activity (actID,actName, actTime,actPlace,actNum,actLackNum,actCutOffTime,actStatus,imgURL,actPrice,billingMethods,actExplain,userID,actPeople)' 
-			+ 'VALUES ("' + actID + '","' + actName + '","' + actTime + '","' + actPlace + '","' + actNum + '","' + actNum + '","' + actCutOffTime + '","' + actStatus + '","' + null + '","' + actPrice+ '","' + billingMethods+ '","' + actExplain+ '","' + userID+'","' + '[]'+ '") ';
+		var sql = 'INSERT INTO activity (actID,actName, actTime,actPlace,actNum,actLackNum,actCutOffTime,actStatus,imgURL,actPrice,billingMethods,actExplain,userID,actPeople,actClass)' 
+			+ 'VALUES ("' + actID + '","' + actName + '","' + actTime + '","' + actPlace + '","' + actNum + '","' + actNum + '","' + actCutOffTime + '","' + actStatus + '","' + null + '","' + actPrice+ '","' + billingMethods+ '","' + actExplain+ '","' + userID+'","' + '[]'+'","' + actClass + '") ';
 		console.log(sql)
 		connection.query(sql, function (err, result) {
 			if (err) {
