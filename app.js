@@ -75,6 +75,7 @@ var register = require('./routes/register');
 var mine = require('./routes/mine');
 var sport = require('./routes/sport');
 var comment = require('./routes/comment');
+var chat = require('./routes/chat');
 
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -100,6 +101,7 @@ app.use('/register',register);
 app.use('/mine',mine);
 app.use('/sport',sport);
 app.use('/comment',comment);
+app.use('/chat',chat);
 
 
 
@@ -114,5 +116,7 @@ var server = app.listen(8080, function () {
 
 console.log('启动服务'); 
 });
-
+app.ready=function(server){
+    chat.prepareSocketIO(server);
+  };
 module.exports = app;
