@@ -22,11 +22,10 @@ router.post('/', function (req, res) {
         connection.query(sql, function (err, result) {
             if (err) {
                 throw err;
-                res.send('0');//
+                res.send('0');
                 return;
             }else{
-                console.log(result);
-                res.send(result);//上传成功
+                res.send(result);
                 return;
             }
         });
@@ -74,12 +73,10 @@ router.post('/avatar',function(req,res,next){
 //修改基本信息模块
 router.post('/changeMsg',function(req,res){
     var userID = req.body.userID,
-        // userName = req.boby.userName,
         telNumber = req.body.telNumber,
         userSign = req.body.userSign,
         userName = req.body.userName;
-    console.log(req.body);
-    // console.log(userName)
+
         let pool = mysql.createPool({
             host: 'localhost',
             user: 'root',
@@ -88,7 +85,7 @@ router.post('/changeMsg',function(req,res){
         });
         pool.getConnection(function (err, connection) {
             var sql = 'update userInfo set userName=\''+userName+'\',telNumber=\''+telNumber+'\', signature=\''+userSign+'\' where userID="'+userID+'"';
-            console.log(sql)
+
             connection.query(sql, function (err, result) {
                 if (err) {
                     throw err;

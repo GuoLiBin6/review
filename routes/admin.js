@@ -7,9 +7,11 @@ var mysql  = require('mysql');
 var EventEmitter=require('events').EventEmitter;
 var emitter=new EventEmitter();
 
-/* GET home page. */
-router.get('/', function(req, res) {
-
+//修改管理员密码
+router.post('/changePWD', function(req, res) {
+	var username = req.body.username,
+		password = req.body.password;
+	console.log(username+password);
 	let pool = mysql.createPool({
 		host: 'localhost',
 		user: 'root',
@@ -17,12 +19,12 @@ router.get('/', function(req, res) {
 		database: 'yuedong'
 	});
 	pool.getConnection(function (err, connection) {
-		connection.query('select * from home', function (err, result) {
+		connection.query('update useradmin set password=\''+password+'\' where username = \''+username+'\'', function (err, result) {
 			if (err) {
 				throw err;
 				res.send('5');//5数据库连接出错
 			} else {
-				res.send(result);
+				res.send('1');
 				return;
 			}
 		});
@@ -31,7 +33,9 @@ router.get('/', function(req, res) {
 	});
 });
 
-router.get('/goodTopic', function(req, res) {
+//删除管理员
+router.post('/rmAdministrator', function(req, res) {
+	var username = req.body.username;
 
 	let pool = mysql.createPool({
 		host: 'localhost',
@@ -40,12 +44,12 @@ router.get('/goodTopic', function(req, res) {
 		database: 'yuedong'
 	});
 	pool.getConnection(function (err, connection) {
-		connection.query('select * from topic order by topicID desc limit 5', function (err, result) {
+		connection.query('delete from useradmin where username = \''+username+'\'', function (err, result) {
 			if (err) {
 				throw err;
 				res.send('5');//5数据库连接出错
 			} else {
-				res.send(result);
+				res.send('1');
 				return;
 			}
 		});
@@ -53,8 +57,10 @@ router.get('/goodTopic', function(req, res) {
 		connection.release();
 	});
 });
-//后台管理的index页面
-router.get('/index/admin', function(req, res) {
+//添加管理员
+router.post('/addAdministrator', function(req, res) {
+	var username = req.body.username,
+		password = req.body.password;
 
 	let pool = mysql.createPool({
 		host: 'localhost',
@@ -62,26 +68,14 @@ router.get('/index/admin', function(req, res) {
 		password: '',
 		database: 'yuedong'
 	});
-	
 	pool.getConnection(function (err, connection) {
-		let countArr=[];
-		connection.query('select count(*) from userInfo',function(err,result){
-			if(err) throw err;
-			else{
-				let userCount = result[0]['count(*)'];
-				countArr.push(userCount);
-				connection.query('select count(*) from vanue',function(err,result){
-					if(err) throw err;
-					else{
-						let vanueCount = result[0]['count(*)'];
-						countArr.push(vanueCount);
-						connection.query('select count(*) from activity',function(err,result){
-							let actCount = result[0]['count(*)'];
-							countArr.push(actCount);
-							res.send(countArr);
-						})
-					}
-				})
+		connection.query('insert into useradmin (username,password,class) values ("'+username+'","'+password+'","admin")', function (err, result) {
+			if (err) {
+				throw err;
+				res.send('5');//5数据库连接出错
+			} else {
+				res.send('1');
+				return;
 			}
 		});
 
@@ -89,8 +83,8 @@ router.get('/index/admin', function(req, res) {
 	});
 });
 
-//后台管理获取管理员信息
-router.get('/administrator', function(req, res) {
+//后台管理获取场地信息
+router.get('/store', function(req, res) {
 
 	let pool = mysql.createPool({
 		host: 'localhost',
@@ -101,26 +95,32 @@ router.get('/administrator', function(req, res) {
 	
 	pool.getConnection(function (err, connection) {
 		let adminArr=[];
-		connection.query('select * from useradmin',function(err,result){
+		var sql = 'select * from vanue';
+		console.log(sql)
+		connection.query(sql,function(err,result){
 			if(err) throw err;
 			else{
 				console.log(result)	
 				for(var i=0;i<result.length;i++){
 					var obj = {};
-					obj.username = result[i].username;
-					obj.password = result[i].password;
-					obj.class = result[i].class;
+					obj.vanueID = result[i].vanueID;
+					obj.vanueName = result[i].vanueName;
+					obj.vanuePlace = result[i].vanuePlace;
+					obj.vanueAssess = result[i].vanueAssess;
+					obj.vanueOrder = result[i].vanueOrder;
+					obj.vanuePrice = result[i].vanuePrice;
+					obj.vanueClass = result[i].vanueClass;
+					obj.imgURL = result[i].imgURL;
 					adminArr.push(obj);
 				}
 				res.send(adminArr)
+
 			}
 		});
 
 		connection.release();
 	});
 });
-
-
 
 
 

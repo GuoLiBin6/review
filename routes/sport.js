@@ -73,7 +73,6 @@ router.post('/addAct', function (req, res) {
 		billingMethods = req.body.billingMethods,
 		actExplain = req.body.actExplain,
 		actClass = req.body.actClass,
-		actID ='act' + method.getNowFormatDate(),
 		actStatus = '未开始';
 
 	//定义数据库连接池

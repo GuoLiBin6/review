@@ -40,7 +40,7 @@ router.post('/', function (req, res) {
 			}
 			if (!exist) {
 				// 		//插入注册的用户信息到userInfo表
-				var ins = 'INSERT INTO userInfo (userID,userName, password,telNumber,mail,signature,avatar) VALUES ("' + method.getNowFormatDate() + '","' + ('用户'+method.getNowFormatDate()) + '","' + password + '","' + telNumber + '","' + null + '","' + null + '","' + null + '") ';
+				var ins = 'INSERT INTO userInfo (userName, password,telNumber,mail,signature,avatar) VALUES ("' + ('用户'+telNumber) + '","' + password + '","' + telNumber + '","' + null + '","' + null + '","' + null + '") ';
 				connection.query(ins, function (err, result) {
 					if (err) {
 						console.log('插入错误', err.message);

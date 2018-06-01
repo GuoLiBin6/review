@@ -103,16 +103,23 @@
         console.log('链接成功');
         userName = '用户201805021012';
         socket.emit('join', userName);
+        socket.emit('joinRoom','a');
     });
-    socket.on('pmsg', function (from,to,msg) {
+    socket.on('pmsg', function (data) {
         
-        console.log('接受消息'+msg)
+        console.log('接受消息'+data.message)
     });
+    // $('#send').addEventListener('click', function (target) {
+    // 	var from = '用户201805021011',
+    // 		to = '用户201805021010',
+    // 		msg = '一条消息';
+    //     socket.emit('private_message',from,to,msg);
+    // });
     $('#send').addEventListener('click', function (target) {
     	var from = '用户201805021011',
     		to = '用户201805021010',
     		msg = '一条消息';
-        socket.emit('private_message',from,to,msg);
+        socket.emit('leave');
     });
 
     function $(flag) {

@@ -103,10 +103,11 @@
         console.log('链接成功');
         userName = '201805021011';
         socket.emit('join', userName);
+        socket.emit('joinRoom','b');
     });
-    socket.on('pmsg', function (from,to,msg) {
+    socket.on('pmsg', function (data) {
         
-        console.log('接受消息'+msg)
+        console.log('接受消息'+data.message)
     });
     socket.on('addFriendReq',function(data){
         console.log(data.messageFrom+'请求加好友')
@@ -115,7 +116,8 @@
     	var from = '201805021011',
     		to = '201805021010',
     		msg = '一条消息';
-        socket.emit('addFriendOk',from,to,msg);
+        // socket.emit('pmsg',from,to,msg);
+        socket.send(msg)
     });
 
     function $(flag) {

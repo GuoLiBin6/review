@@ -76,6 +76,7 @@ var mine = require('./routes/mine');
 var sport = require('./routes/sport');
 var comment = require('./routes/comment');
 var chat = require('./routes/chat');
+var admin = require('./routes/admin');
 
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -102,6 +103,7 @@ app.use('/mine',mine);
 app.use('/sport',sport);
 app.use('/comment',comment);
 app.use('/chat',chat);
+app.use('/admin',admin);
 
 
 
