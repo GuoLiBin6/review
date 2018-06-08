@@ -49,7 +49,7 @@ router.post('/adminUserAvatar',function(req,res,next){
             method.rename(files.modal_file.path,fileName)//三个参数为上传前文件目录，文件名，将文件保存到服务器端
             //将上传头像名保存到数据库
             pool.getConnection(function (err, connection) {
-                var avatarName = 'http://localhost:8080/upload/'+fileName;
+                var avatarName = 'http://39.107.66.152:8080/upload/'+fileName;
                 var sql = 'update useradmin set imgURL=\''+avatarName+'\' where useradminID = \''+fields.userID+'\'';
                 connection.query(sql, function (err, result) {
                     if (err) {
