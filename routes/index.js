@@ -54,8 +54,10 @@ router.get('/goodTopic', function(req, res) {
 	});
 });
 //后台管理的index页面
-router.get('/index/admin', function(req, res) {
-
+router.post('/index/admin', function(req, res) {
+	var username = req.body.username;
+	console.log(username)
+	let countArr=[];
 	let pool = mysql.createPool({
 		host: 'localhost',
 		user: 'root',
@@ -64,7 +66,7 @@ router.get('/index/admin', function(req, res) {
 	});
 	
 	pool.getConnection(function (err, connection) {
-		let countArr=[];
+		
 		connection.query('select count(*) from userInfo',function(err,result){
 			if(err) throw err;
 			else{
@@ -78,7 +80,15 @@ router.get('/index/admin', function(req, res) {
 						connection.query('select count(*) from activity',function(err,result){
 							let actCount = result[0]['count(*)'];
 							countArr.push(actCount);
-							res.send(countArr);
+							connection.query('select useradminID,imgURL from useradmin where username = "'+username+'"',function(err,result){
+								let imgURL = result[0]['imgURL'];
+								let userID = result[0]['useradminID']
+								countArr.push(imgURL);
+								countArr.push(userID);
+								console.log(countArr)
+								res.send(countArr);
+							})
+							
 						})
 					}
 				})
@@ -110,6 +120,7 @@ router.get('/administrator', function(req, res) {
 					obj.username = result[i].username;
 					obj.password = result[i].password;
 					obj.class = result[i].class;
+					obj.imgURL = result[i].imgURL;
 					adminArr.push(obj);
 				}
 				res.send(adminArr)

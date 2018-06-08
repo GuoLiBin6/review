@@ -31,7 +31,7 @@ router.post('/getComment', function (req, res) {
 router.post('/addComment', function (req, res) {
     var topicID = req.body.topicID;
     var userName = req.body.userName;
-    var commentTime = method.getNowFormatDate();
+    var commentTime = method.getNowFormatDate1();
     var content = req.body.content;
 	//定义数据库连接池
 	let pool = mysql.createPool({

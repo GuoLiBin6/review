@@ -5,18 +5,18 @@ var method = require('./method.js');
 var fromidable = require('formidable');
 var fs=  require('fs');
 var path = require('path');
-
-
-
-//我的模块的信息请求
-router.post('/', function (req, res) {
-    var userID = req.body.userID;
-    let pool = mysql.createPool({
+//定义数据库连接池
+ let pool = mysql.createPool({
         host: 'localhost',
         user: 'root',
         password: '',
         database: 'yuedong'
     });
+
+//我的模块的信息请求
+router.post('/', function (req, res) {
+    var userID = req.body.userID;
+   
     pool.getConnection(function (err, connection) {
         var sql = 'select userName,telNumber,signature,avatar from userInfo where userID="'+userID+'"';
         connection.query(sql, function (err, result) {
@@ -42,16 +42,11 @@ router.post('/avatar',function(req,res,next){
     form.parse(req,function(err,fields,files){
         if(files.modal_file){
             var userId = fields.userID;
-            var fileName = fields.userID + files.modal_file.name.substr(files.modal_file.name.indexOf('.'));//获得userID+后缀名的文件名
+            var fileName = 'user'+ fields.userID + files.modal_file.name.substr(files.modal_file.name.indexOf('.'));//获得userID+后缀名的文件名
             console.log(fileName);
             method.rename(files.modal_file.path,fileName)//三个参数为上传前文件目录，文件名，将文件保存到服务器端
             //将上传头像名保存到数据库
-            let pool = mysql.createPool({
-                host: 'localhost',
-                user: 'root',
-                password: '',
-                database: 'yuedong'
-            });
+            
             pool.getConnection(function (err, connection) {
                 var avatarName = 'http://39.107.66.152:8080/upload/'+fileName;
                 var sql = 'update userInfo set avatar=\''+avatarName+'\' where userID = \''+fields.userID+'\'';
@@ -77,12 +72,7 @@ router.post('/changeMsg',function(req,res){
         userSign = req.body.userSign,
         userName = req.body.userName;
 
-        let pool = mysql.createPool({
-            host: 'localhost',
-            user: 'root',
-            password: '',
-            database: 'yuedong'
-        });
+       
         pool.getConnection(function (err, connection) {
             var sql = 'update userInfo set userName=\''+userName+'\',telNumber=\''+telNumber+'\', signature=\''+userSign+'\' where userID="'+userID+'"';
 
@@ -108,12 +98,7 @@ router.post('/changePwd',function(req,res){
         newPwd = method.md5s(req.body.newPwd);
     console.log(req.body);
     // console.log(userName)
-        let pool = mysql.createPool({
-            host: 'localhost',
-            user: 'root',
-            password: '',
-            database: 'yuedong'
-        });
+
         pool.getConnection(function (err, connection) {
             var sql = 'select password from userInfo where userID="'+userID+'"';
             console.log(sql)
