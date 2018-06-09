@@ -3,6 +3,7 @@ var router = express.Router();
 var  mysql  =  require('mysql');
 var method = require('./method.js');
 var fromidable = require('formidable');
+var Buffer = require('buffer').Buffer;
 var fs=  require('fs');
 var path = require('path');
 //定义数据库连接池
@@ -34,36 +35,42 @@ router.post('/', function (req, res) {
 	// res.send('mine');
 });
 
-
-//修改头像模块
-router.post('/avatar',function(req,res,next){
-    var form = new fromidable.IncomingForm();
-    //解析req，找到文件
-    form.parse(req,function(err,fields,files){
-        if(files.modal_file){
-            var userId = fields.userID;
-            var fileName = 'user'+ fields.userID + files.modal_file.name.substr(files.modal_file.name.indexOf('.'));//获得userID+后缀名的文件名
-            console.log(fileName);
-            method.rename(files.modal_file.path,fileName)//三个参数为上传前文件目录，文件名，将文件保存到服务器端
-            //将上传头像名保存到数据库
-            
-            pool.getConnection(function (err, connection) {
+//用户修改头像模块
+router.post('/chAvatar',function(req,res,next){
+ 	var userID = req.body.userID;
+ 	var imgData = req.body.imgData;
+ 	var fileName = 'user'+ userID + '.jpg';
+ 	
+    var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
+    var dataBuffer = new Buffer(base64Data, 'base64');
+    fs.writeFile('./public/upload/'+fileName, dataBuffer, function(err) {
+        if(err){
+          res.send(err);
+        }else{
+          pool.getConnection(function (err, connection) {
                 var avatarName = 'http://39.107.66.152:8080/upload/'+fileName;
-                var sql = 'update userInfo set avatar=\''+avatarName+'\' where userID = \''+fields.userID+'\'';
+                var sql = 'update userInfo set avatar=\''+avatarName+'\' where userID = \''+userID+'\'';
                 connection.query(sql, function (err, result) {
                     if (err) {
                         throw err;
                         res.send('0');//修改失败
                         return;
                     }else{
-                        res.send('1');//修改成功
+                        res.send({avatar:avatarName});//修改成功
                         return;
                     }
                 });
                 connection.release();
             }); 
         }
-    });   
+    });
+ 	
+
+ 	console.log(fileName);
+
+ 	
+ 	
+ 	
 });
 //修改基本信息模块
 router.post('/changeMsg',function(req,res){
