@@ -39,7 +39,7 @@ router.post('/', function (req, res) {
 router.post('/chAvatar',function(req,res,next){
  	var userID = req.body.userID;
  	var imgData = req.body.imgData;
- 	var fileName = 'user'+ userID + '.jpg';
+ 	var fileName = 'user'+ userID + method.getNowFormatDate()+'.jpg';
  	
     var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
     var dataBuffer = new Buffer(base64Data, 'base64');
@@ -56,7 +56,7 @@ router.post('/chAvatar',function(req,res,next){
                         res.send('0');//修改失败
                         return;
                     }else{
-                        res.send({avatar:avatarName});//修改成功
+                        res.send({avatar:avatarName});
                         return;
                     }
                 });
