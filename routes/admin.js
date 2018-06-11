@@ -20,8 +20,8 @@ let pool = mysql.createPool({
 //修改管理员密码
 router.post('/changePWD', function(req, res) {
 	var username = req.body.username,
-		password = req.body.password;
-	console.log(username+password);
+		password = method.md5s(req.body.password);
+
 
 	pool.getConnection(function (err, connection) {
 		connection.query('update useradmin set password=\''+password+'\' where username = \''+username+'\'', function (err, result) {
@@ -89,7 +89,7 @@ router.post('/rmAdministrator', function(req, res) {
 //添加管理员
 router.post('/addAdministrator', function(req, res) {
 	var username = req.body.username,
-		password = req.body.password;
+		password = method.md5s(req.body.password);
 
 	pool.getConnection(function (err, connection) {
 		connection.query('insert into useradmin (username,password,class,imgURL) values ("'+username+'","'+password+'","admin","http://39.107.66.152:8080/upload/201805021010.jpg")', function (err, result) {

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var  mysql  =  require('mysql');
 var method = require('./method.js');
+var fs = require('fs');
 //获得场地列表
 router.get('/', function (req, res) {	
 	//定义数据库连接池
@@ -59,7 +60,6 @@ router.post('/getActList', function (req, res) {
 		});
 		connection.release();
 	});
-
 });
 //发起活动
 router.post('/addAct', function (req, res) {
@@ -73,7 +73,9 @@ router.post('/addAct', function (req, res) {
 		billingMethods = req.body.billingMethods,
 		actExplain = req.body.actExplain,
 		actClass = req.body.actClass,
-		actStatus = '未开始';
+		actStatus = '未开始',
+		imgData = req.body.imgData;
+		
 
 	//定义数据库连接池
 	let pool = mysql.createPool({
@@ -82,23 +84,38 @@ router.post('/addAct', function (req, res) {
 		password: '',
 		database: 'yuedong'
 	});
-	pool.getConnection(function (err, connection) {
-		var sql = 'INSERT INTO activity (actID,actName, actTime,actPlace,actNum,actLackNum,actCutOffTime,actStatus,imgURL,actPrice,billingMethods,actExplain,userID,actPeople,actClass)' 
-			+ 'VALUES ("' + actID + '","' + actName + '","' + actTime + '","' + actPlace + '","' + actNum + '","' + actNum + '","' + actCutOffTime + '","' + actStatus + '","' + null + '","' + actPrice+ '","' + billingMethods+ '","' + actExplain+ '","' + userID+'","' + '[]'+'","' + actClass + '") ';
-		console.log(sql)
-		connection.query(sql, function (err, result) {
-			if (err) {
-				throw err;
-				res.send('5');//5数据库连接出错
-			} else {
-				res.send('1');
-				return;
-			}
-			res.send('0');
-			return;
-		});
-		connection.release();
-	});
+	var fileName,imgName;
+	if(imgData){
+		fileName = 'act'+ userID + method.getNowFormatDate()+'.jpg';
+		imgName = 'http://39.107.66.152:8080/upload/'+fileName;
+	    var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
+	    var dataBuffer = new Buffer(base64Data, 'base64');
+	    fs.writeFile('./public/upload/'+fileName, dataBuffer, function(err) {
+	        if(err){
+	          res.send(err);
+	        }else{
+	        }
+	    });
+	}else{
+		imgName = 'http://39.107.66.152:8080/upload/201805021010.jpg';
+	}
+  pool.getConnection(function (err, connection) {
+        var sql = 'INSERT INTO activity (actName, actTime,actPlace,actNum,actLackNum,actCutOffTime,actStatus,imgURL,actPrice,billingMethods,actExplain,userID,actPeople,actClass)' 
+	+ 'VALUES ("' + actName + '","' + actTime + '","' + actPlace + '","' + actNum + '","' + actNum + '","' + actCutOffTime + '","' + actStatus + '","' + imgName + '","' + actPrice+ '","' + billingMethods+ '","' + actExplain+ '","' + userID+'","' + '[]'+'","' + actClass + '") ';
+        connection.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+                res.send('0');//修改失败
+                return;
+            }else{
+                res.send('1');
+                return;
+            }
+        });
+        connection.release();
+    }); 
+
+
 
 });
 //报名活动
