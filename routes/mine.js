@@ -136,6 +136,23 @@ router.post('/changePwd',function(req,res){
             connection.release();
         }); 
 });
+//我发起的活动
+router.post('/myAddAct', function(req, res) {
+	var userID= req.body.userID;
 
+	pool.getConnection(function (err, connection) {
+		connection.query('select * from activity where userID = '+userID, function (err, result) {
+			if (err) {
+				throw err;
+				res.send('5');//5数据库连接出错
+			} else {
+				res.send(result);
+				return;
+			}
+		});
+
+		connection.release();
+	});
+});
 //对
 module.exports = router;

@@ -6,6 +6,12 @@ var mysql  = require('mysql');
 
 var EventEmitter=require('events').EventEmitter;
 var emitter=new EventEmitter();
+	let pool = mysql.createPool({
+		host: 'localhost',
+		user: 'root',
+		password: '',
+		database: 'yuedong'
+	});
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -30,17 +36,30 @@ router.get('/', function(req, res) {
 		connection.release();
 	});
 });
-
+//获得首页热门话题
 router.get('/goodTopic', function(req, res) {
 
-	let pool = mysql.createPool({
-		host: 'localhost',
-		user: 'root',
-		password: '',
-		database: 'yuedong'
-	});
+
 	pool.getConnection(function (err, connection) {
 		connection.query('select * from topic order by topicID desc limit 5', function (err, result) {
+			if (err) {
+				throw err;
+				res.send('5');//5数据库连接出错
+			} else {
+				res.send(result);
+				return;
+			}
+		});
+
+		connection.release();
+	});
+});
+//获得首页热门运动的分类
+router.post('/goodActInfo', function(req, res) {
+
+	var className = req.body.className;
+	pool.getConnection(function (err, connection) {
+		connection.query('select * from activity where actClass ="'+className+'" or actClass = "其他"', function (err, result) {
 			if (err) {
 				throw err;
 				res.send('5');//5数据库连接出错
