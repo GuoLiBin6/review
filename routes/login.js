@@ -43,7 +43,7 @@ router.post('/', function (req, res) {
 router.post('/admin', function (req, res) {
 	//获得用户名和密码
 	var userName = req.body.username;
-	var password = method.md5s(req.body.password);
+	var password = req.body.password;
 	//定义数据库连接池
 	let pool = mysql.createPool({
 		host: 'localhost',
