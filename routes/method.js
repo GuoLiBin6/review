@@ -96,5 +96,6 @@ let rename = (old_path, new_name, bId) => {
 module.exports = {
 	getNowFormatDate,
 	md5s,
-	rename
+	rename,
+	getNowFormatDate1
 }

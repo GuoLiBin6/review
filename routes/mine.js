@@ -154,5 +154,101 @@ router.post('/myAddAct', function(req, res) {
 		connection.release();
 	});
 });
-//对
+
+//添加运动圈消息
+router.post('/sportCircle',function(req,res,next){
+ 	var userID = req.body.userID,
+ 	    imgData = req.body.imgData,
+ 	    userName = req.body.userName,
+ 	    avatar = req.body.avatar,
+ 	    content = req.body.content;
+ 	var len = imgData.length;
+ 	var i =0;
+ 	var fileNames = [];
+
+	 	if(imgData[0]){
+	 		for(i;i<len;i++){
+	 			let fileName = 'circle'+ userID + method.getNowFormatDate()+i+'.jpg';
+	 			let storeName = "'http://39.107.66.152:8080/upload"+fileName+"'";
+			    fileNames.push(storeName);
+	 			
+	    		let base64Data = imgData[i].replace(/^data:image\/\w+;base64,/, "");
+	    		let dataBuffer = new Buffer(base64Data, 'base64');
+			    fs.writeFile('./public/upload/'+fileName, dataBuffer, function(err) {
+			        if(err){
+			          res.send('0');
+			        }else{
+			         	
+	 				}
+	 			});
+			}
+	 		
+	 			
+	 	}
+	 	if(i == len){
+	 		fileNames = '['+fileNames+']';
+	 		pool.getConnection(function (err, connection) {
+	 			let sql = 'insert into circle (userName,avatar,circleTime,circleContent,imgURL,userID) values("'+userName+'","'+avatar+'","'+method.getNowFormatDate1()+'","'+content+'","'+fileNames+'","'+userID+'")'
+	 			console.log(sql)
+				connection.query(sql, function (err, result) {
+					if (err) {
+						throw err;
+						res.send('0');//5数据库连接出错
+					} else {
+						res.send('1');
+						return;
+					}
+				});
+			
+				connection.release();
+			});
+	 	}
+
+	
+});
+//获取运动圈消息
+router.post('/getCircleList', function (req, res) {
+    var userID = req.body.userID;
+    var friendArr = [];
+    var roomInfo = {};
+    var num = 0;
+    let pool = mysql.createPool({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'yuedong'
+    });
+    pool.getConnection(function (err, connection) {
+        connection.query('select * from friendShip where friendFrom = "' + userID + '" or friendTo = "' + userID + '"', function (err, result) {
+            if (err) {
+                throw err;
+                res.send('5');//5数据库连接出错
+            } else {
+                var p = new Promise(
+                    function (resolve, reject) {
+                        for (var i = 0; i < result.length; i++) {
+                            if (result[i].friendFrom != userID) {
+                                friendArr.push(result[i].friendFrom)
+                            } else if (result[i].friendTo != userID) {
+                                friendArr.push(result[i].friendTo)
+                            }
+                        }
+                        
+                        resolve(friendArr);
+                    })
+                p.then(function (friendArr) {
+                	console.log(friendArr)
+                    connection.query('select * from circle where userID in (' + friendArr + ')', function (err, result) {
+                        if (err) {
+                            throw err;
+                        } else {
+                            res.send(result)
+                        }
+                    })
+                })
+            }
+        });
+        connection.release();
+    });
+});
 module.exports = router;
