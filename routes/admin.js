@@ -391,7 +391,7 @@ router.post('/activity', function(req, res) {
 					obj.actID = result[i].actID;
 					obj.actName = result[i].actName;
 					obj.actPlace = result[i].actPlace;
-					obj.actTime = result[i].actTime;
+					obj.actTime = result[i].actTime.toLocaleString();
 					obj.actClass = result[i].actClass;
 					obj.userID = result[i].userID;
 					
@@ -480,7 +480,7 @@ router.post('/topic', function(req, res) {
 					obj.topicID = result[i].topicID;
 					obj.topicName = result[i].topicName;
 					obj.topicNum = result[i].topicNum;
-					obj.topicTime = result[i].topicTime;
+					obj.topicTime = result[i].topicTime.toLocaleString();
 					obj.topicContent = result[i].topicContent;
 
 					
