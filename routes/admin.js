@@ -41,7 +41,7 @@ router.post('/addNewOption', function(req, res) {
 router.get('/getNewOption', function(req, res) {
 
 	pool.getConnection(function (err, connection) {
-		connection.query('select * from optionlist order by id desc limit 1,8', function (err, result) {
+		connection.query('select * from optionlist order by id desc limit 0,8', function (err, result) {
 			if (err) {
 				throw err;
 				res.send('5');//5数据库连接出错
