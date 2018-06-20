@@ -14,6 +14,13 @@ var emitter=new EventEmitter();
 	});
 
 /* GET home page. */
+router.get('/yuedong-admin',function(req,res){
+	 const html = fs.readFileSync('./public/yuedong-admin/dist/index.html', 'utf-8')
+	 res.setHeader('Content-type','text/html')
+//	 res.writeHead(200,{'Content-Type':'text/html'})
+   	 res.end(html)
+
+})
 router.get('/', function(req, res) {
 
 	let pool = mysql.createPool({

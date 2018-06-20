@@ -17,6 +17,44 @@ let pool = mysql.createPool({
 	password: '',
 	database: 'yuedong'
 });
+//添加最近操作
+router.post('/addNewOption', function(req, res) {
+	var options = req.body.options,
+		time = method.getNowFormatDate1();
+
+
+	pool.getConnection(function (err, connection) {
+		connection.query('insert into optionlist (content,time) values ("'+options+'","'+time+'")', function (err, result) {
+			if (err) {
+				throw err;
+				res.send('5');//5数据库连接出错
+			} else {
+				res.send('1');
+				return;
+			}
+		});
+
+		connection.release();
+	});
+});
+//获取最近操作
+router.get('/getNewOption', function(req, res) {
+
+	pool.getConnection(function (err, connection) {
+		connection.query('select * from optionlist order by id desc limit 1,8', function (err, result) {
+			if (err) {
+				throw err;
+				res.send('5');//5数据库连接出错
+			} else {
+				
+				res.send(result);
+				return;
+			}
+		});
+
+		connection.release();
+	});
+});
 //修改管理员密码
 router.post('/changePWD', function(req, res) {
 	var username = req.body.username,
@@ -45,7 +83,7 @@ router.post('/adminUserAvatar',function(req,res,next){
         if(files.modal_file){
             var userId = fields.userID;
             var fileName = 'adminuser'+fields.userID + files.modal_file.name.substr(files.modal_file.name.indexOf('.'));//获得userID+后缀名的文件名
-            console.log(fileName);
+
             method.rename(files.modal_file.path,fileName)//三个参数为上传前文件目录，文件名，将文件保存到服务器端
             //将上传头像名保存到数据库
             pool.getConnection(function (err, connection) {
@@ -169,11 +207,9 @@ router.post('/changeVanue', function(req, res) {
 		order = req.body.vanueOrder,
 		tel = req.body.telNumber,
 		assess = req.body.vanueAssess;
-
-
 	pool.getConnection(function (err, connection) {
 		var sql = "update vanue set vanueName= '"+name+"',vanuePlace = '"+place+"',vanuePrice = '"+price+"',vanueClass='"+clas+"',vanueOrder='"+order+"',vanueAssess='"+assess+"',telNumber = '"+tel+"' where vanueID = '"+id+"'";
-		console.log(sql)
+
 		connection.query(sql, function (err, result) {
 			if (err) {
 				throw err;
@@ -221,7 +257,7 @@ router.post('/addVanue', function(req, res) {
 
 	pool.getConnection(function (err, connection) {
 		var sql = 'insert into vanue (vanueName,vanuePlace,vanueAssess,vanueOrder,vanueClass,telNumber,vanuePrice) values ("'+vanueName+'","'+vanuePlace+'","'+vanueAssess+'","'+vanueOrder+'","'+vanueClass+'","'+telNumber+'","'+vanuePrice+'")';
-		console.log(sql)
+
 		connection.query(sql, function (err, result) {
 			if (err) {
 				throw err;
@@ -249,11 +285,11 @@ router.post('/addVanue1',function(req,res,next){
 		        telNumber=fields.telNumber,
 		        vanuePrice = fields.vanuePrice;
             var fileName = 'vanue'+method.getNowFormatDate() + files.modal_file.name.substr(files.modal_file.name.indexOf('.'));//获得userID+后缀名的文件名
-            console.log(fileName);
+
             method.rename(files.modal_file.path,fileName)//三个参数为上传前文件目录，文件名，将文件保存到服务器端
             //将上传头像名保存到数据库
             pool.getConnection(function (err, connection) {
-                var imgurl = 'http://localhost:8080/upload/'+fileName;
+                var imgurl = 'http://39.107.66.152:8080/upload/'+fileName;
 				var sql = 'insert into vanue (vanueName,vanuePlace,vanueAssess,vanueOrder,vanueClass,telNumber,vanuePrice,imgURL) values ("'+vanueName+'","'+vanuePlace+'","'+vanueAssess+'","'+vanueOrder+'","'+vanueClass+'","'+telNumber+'","'+vanuePrice+'","'+imgurl+'")';
                 
                 connection.query(sql, function (err, result) {
@@ -330,7 +366,7 @@ router.post('/changeUser', function(req, res) {
 	}
 	pool.getConnection(function (err, connection) {
 
-		console.log(sql)
+
 		connection.query(sql, function (err, result) {
 			if (err) {
 				throw err;
@@ -439,7 +475,7 @@ router.post('/changeActivity', function(req, res) {
 
 	pool.getConnection(function (err, connection) {
 		var sql = "update activity set actName= '"+name+"',actPlace = '"+place+"',actClass='"+clas+"',actTime='"+time+"' where actID = '"+id+"'";
-		console.log(sql)
+
 		connection.query(sql, function (err, result) {
 			if (err) {
 				throw err;
@@ -525,11 +561,11 @@ router.post('/addTopic',function(req,res,next){
             var topicName = fields.topicName,
             	topicContent = fields.topicContent;
             var fileName = 'topic'+method.getNowFormatDate() + files.modal_file.name.substr(files.modal_file.name.indexOf('.'));//获得userID+后缀名的文件名
-            console.log(fileName);
+
             method.rename(files.modal_file.path,fileName)//三个参数为上传前文件目录，文件名，将文件保存到服务器端
             //将上传头像名保存到数据库
             pool.getConnection(function (err, connection) {
-                var imgurl = 'http://localhost:8080/upload/'+fileName;
+                var imgurl = 'http://39.107.66.152:8080/upload/'+fileName;
 				var sql = 'insert into topic (topicName,topicContent,topicNum,imgURL,topicTime) values ("'+topicName+'","'+topicContent+'","0","'+imgurl+'","'+getNowFormatDate1()+'")';
                 
                 connection.query(sql, function (err, result) {
