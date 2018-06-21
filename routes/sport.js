@@ -170,4 +170,49 @@ router.post('/signUpAct', function (req, res) {
 	});
 
 });
+//获得活动人员
+router.post('/getActListPeople', function (req, res) {
+	var list = req.body.list;
+	//定义数据库连接池
+	let pool = mysql.createPool({
+		host: 'localhost',
+		user: 'root',
+		password: '',
+		database: 'yuedong'
+	});
+	pool.getConnection(function (err, connection) {
+		var arr=[];
+		
+		var p = new Promise(
+			function(resolve,reject){
+				for(var i=0;i<list.length;i++){
+					var sql='select * from userInfo where userId = '+list[i];
+
+					connection.query(sql,function(err,result){
+
+						if(err) throw err;
+						else{
+							var obj = {
+								userName:result[0].userName,
+								userID:list[i]
+							}
+							arr.push(obj)
+						}
+
+						
+					})
+				}
+				resolve(arr);
+			}
+		)
+		p.then(function(arr){
+			setTimeout(function(){
+				res.send(arr);
+			},1000)
+
+		})
+
+		
+	});
+});
 module.exports = router;
