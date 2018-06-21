@@ -93,6 +93,8 @@ app.use(bodyParser.urlencoded({
 	extended:true
 }));
 
+
+
 //使用路由
 app.use('/',index);
 

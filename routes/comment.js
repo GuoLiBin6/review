@@ -30,7 +30,7 @@ router.post('/getComment', function (req, res) {
 //添加评论
 router.post('/addComment', function (req, res) {
     var topicID = req.body.topicID;
-    var userName = req.body.userName;
+    var userID = req.body.userID;
     var commentTime = method.getNowFormatDate1();
     var content = req.body.content;
 	//定义数据库连接池
@@ -41,15 +41,23 @@ router.post('/addComment', function (req, res) {
 		database: 'yuedong'
 	});
 	pool.getConnection(function (err, connection) {
-        var sql = 'insert into comment (userName,topicID,commentTime,content) values("'+userName+'","'+topicID+'","'+commentTime+'","'+content+'")';
-        console.log(sql)
-		connection.query(sql, function (err, result) {
+		var sql0 = 'select * from userInfo where userID = "'+userID+'"';
+		connection.query(sql0, function (err, result) {
 			if (err) {
 				throw err;
 				res.send('5');
 			} else {
-				
-				res.send('1');
+
+				var userName = result[0].userName,
+					avatar = result[0].avatar;
+        		var sql = 'insert into comment (userName,topicID,commentTime,content,avatar) values("'+userName+'","'+topicID+'","'+commentTime+'","'+content+'","'+avatar+'")';
+				connection.query(sql,function(err,result){
+					if(err) throw err;
+					else{
+						res.send('1');
+					}
+				})
+
 				return;
 			}
 		});

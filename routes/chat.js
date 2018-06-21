@@ -128,6 +128,9 @@ router.prepareSocketIO = function (server) {
     var arrAllSocket = {};
     var roomInfo = {};
     var io = socket_io.listen(server);
+    io.set('authorization', function (handshakeData, callback) {
+	
+	})
     io.sockets.on('connection', function (socket) {
         //用户连接聊天服务器
         socket.on('join', function (username) {
