@@ -194,7 +194,7 @@ router.post('/getActListPeople', function (req, res) {
 						else{
 							var obj = {
 								userName:result[0].userName,
-								userID:list[i]
+								userID:result[0].userID
 							}
 							arr.push(obj)
 						}
