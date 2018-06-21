@@ -47,7 +47,13 @@ router.post('/addComment', function (req, res) {
 				throw err;
 				res.send('5');
 			} else {
-
+				connection.query('select topicNum from topic where topicID ="'+topicID+'"',function(err,result){
+					if(err) throw err;
+					else{
+						var num = result[0].topicNum + 1;
+						connection.query('update topic set topicNum=\''+num+'\' where topicID = \''+topicID+'\'',function(err,result){})
+					}
+				})
 				var userName = result[0].userName,
 					avatar = result[0].avatar;
         		var sql = 'insert into comment (userName,topicID,commentTime,content,avatar) values("'+userName+'","'+topicID+'","'+commentTime+'","'+content+'","'+avatar+'")';
