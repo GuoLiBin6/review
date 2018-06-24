@@ -13,7 +13,7 @@ router.post('/getComment', function (req, res) {
 		database: 'yuedong'
 	});
 	pool.getConnection(function (err, connection) {
-		connection.query('select * from comment where topicID = "'+topicID+'"', function (err, result) {
+		connection.query('select * from comment where topicID = "'+topicID+'" order by commentTime desc', function (err, result) {
 			if (err) {
 				throw err;
 				res.send('5');

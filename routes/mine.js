@@ -231,7 +231,7 @@ router.post('/getCircleList', function (req, res) {
                     })
                 p.then(function (friendArr) {
                 	console.log(friendArr)
-                    connection.query('select * from circle where userID in (' + friendArr + ')', function (err, result) {
+                    connection.query('select * from circle where userID in (' + friendArr + ') order by circleTime desc', function (err, result) {
                         if (err) {
                             throw err;
                         } else {

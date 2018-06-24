@@ -41,9 +41,9 @@ router.post('/getActList', function (req, res) {
 	pool.getConnection(function (err, connection) {
 		var sql;
 		if (userID == 'all'){
-			sql = 'select * from activity';
+			sql = 'select * from activity order by actTime desc';
 		}else{
-			sql = 'select * from activity where userID ="' + userID + '"';
+			sql = 'select * from activity where userID ="' + userID + '" order by actTime desc';
 
 		}
 		console.log(sql)
