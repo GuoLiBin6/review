@@ -61,6 +61,7 @@ router.post('/getActList', function (req, res) {
 		connection.release();
 	});
 });
+
 //发起活动
 router.post('/addAct', function (req, res) {
 	var userID = req.body.userID,
@@ -172,7 +173,8 @@ router.post('/signUpAct', function (req, res) {
 });
 //获得活动人员
 router.post('/getActListPeople', function (req, res) {
-	var list = req.body.list;
+	var str = req.body.str;
+	var list = str.split(',');
 	//定义数据库连接池
 	let pool = mysql.createPool({
 		host: 'localhost',
