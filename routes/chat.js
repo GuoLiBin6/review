@@ -56,9 +56,9 @@ router.post('/getFriendList', function (req, res) {
                 var p = new Promise(
                     function (resolve, reject) {
                         for (var i = 0; i < result.length; i++) {
-                            if (result[i].friendFrom != 'userID') {
+                            if (result[i].friendFrom != userID) {
                                 friendArr.push(result[i].friendFrom)
-                            } else if (result[i].friendTo != 'userID') {
+                            } else if (result[i].friendTo != userID) {
                                 friendArr.push(result[i].friendTo)
                             }
                         }
