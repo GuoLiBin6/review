@@ -9,6 +9,8 @@ router.post('/', function (req, res) {
 	//获得用户名和密码
 	var telNumber = req.body.telNumber;
 	var password = method.md5s(req.body.password);
+	avatar = 'http://39.107.66.152:8080/upload/user10201806241811.jpg',
+	sign = '这个人真懒，啥都没留下';
 
 
 	//定义数据库连接池
@@ -40,7 +42,7 @@ router.post('/', function (req, res) {
 			}
 			if (!exist) {
 				// 		//插入注册的用户信息到userInfo表
-				var ins = 'INSERT INTO userInfo (userName, password,telNumber,mail,signature,avatar) VALUES ("' + ('用户'+telNumber) + '","' + password + '","' + telNumber + '","' + null + '","' + null + '","' + null + '") ';
+				var ins = 'INSERT INTO userInfo (userName, password,telNumber,mail,signature,avatar) VALUES ("' + ('用户'+telNumber) + '","' + password + '","' + telNumber + '","' + null + '","' + sign + '","' + avatar + '") ';
 				connection.query(ins, function (err, result) {
 					if (err) {
 						console.log('插入错误', err.message);
