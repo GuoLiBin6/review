@@ -164,7 +164,7 @@ router.post('/sportCircle',function(req,res,next){
  	    content = req.body.content;
 	 	if(imgData){	 		
 	 			let fileName = 'circle'+ userID + method.getNowFormatDate()+'.jpg';
-	 			var storeName = "'http://39.107.66.152:8080/upload"+fileName+"'";
+	 			var storeName = "http://39.107.66.152:8080/upload"+fileName;
 	    		let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
 	    		let dataBuffer = new Buffer(base64Data, 'base64');
 			    fs.writeFile('./public/upload/'+fileName, dataBuffer, function(err) {
