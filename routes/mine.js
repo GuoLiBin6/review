@@ -162,17 +162,10 @@ router.post('/sportCircle',function(req,res,next){
  	    userName = req.body.userName,
  	    avatar = req.body.avatar,
  	    content = req.body.content;
- 	var len = imgData.length;
- 	var i =0;
- 	var fileNames = [];
-
-	 	if(imgData[0]){
-	 		for(i;i<len;i++){
-	 			let fileName = 'circle'+ userID + method.getNowFormatDate()+i+'.jpg';
-	 			let storeName = "'http://39.107.66.152:8080/upload"+fileName+"'";
-			    fileNames.push(storeName);
-	 			
-	    		let base64Data = imgData[i].replace(/^data:image\/\w+;base64,/, "");
+	 	if(imgData){	 		
+	 			let fileName = 'circle'+ userID + method.getNowFormatDate()+'.jpg';
+	 			var storeName = "'http://39.107.66.152:8080/upload"+fileName+"'";
+	    		let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
 	    		let dataBuffer = new Buffer(base64Data, 'base64');
 			    fs.writeFile('./public/upload/'+fileName, dataBuffer, function(err) {
 			        if(err){
@@ -180,29 +173,28 @@ router.post('/sportCircle',function(req,res,next){
 			        }else{
 			         	
 	 				}
-	 			});
-			}
+	 			}); 			
+	 	}else{
+	 	 imgData = null;	
+	 	}
+	 	
 	 		
-	 			
-	 	}
-	 	if(i == len){
-	 		fileNames = '['+fileNames+']';
-	 		pool.getConnection(function (err, connection) {
-	 			let sql = 'insert into circle (userName,avatar,circleTime,circleContent,imgURL,userID) values("'+userName+'","'+avatar+'","'+method.getNowFormatDate1()+'","'+content+'","'+fileNames+'","'+userID+'")'
-	 			console.log(sql)
-				connection.query(sql, function (err, result) {
-					if (err) {
-						throw err;
-						res.send('0');//5数据库连接出错
-					} else {
-						res.send('1');
-						return;
-					}
-				});
-			
-				connection.release();
+ 		pool.getConnection(function (err, connection) {
+ 			let sql = 'insert into circle (userName,avatar,circleTime,circleContent,imgURL,userID) values("'+userName+'","'+avatar+'","'+method.getNowFormatDate1()+'","'+content+'","'+storeName+'","'+userID+'")'
+ 			console.log(sql)
+			connection.query(sql, function (err, result) {
+				if (err) {
+					throw err;
+					res.send('0');//5数据库连接出错
+				} else {
+					res.send('1');
+					return;
+				}
 			});
-	 	}
+		
+			connection.release();
+		});
+	 
 
 	
 });
