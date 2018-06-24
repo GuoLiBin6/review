@@ -202,6 +202,7 @@ router.post('/sportCircle',function(req,res,next){
 router.post('/getCircleList', function (req, res) {
     var userID = req.body.userID;
     var friendArr = [];
+    friendArr.push(userID);
     var roomInfo = {};
     var num = 0;
     let pool = mysql.createPool({
