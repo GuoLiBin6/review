@@ -128,6 +128,30 @@ router.post('/getFriendMessage', function (req, res) {
     });
 });
 
+//获得好友聊天信息
+router.post('/getaddFriendList', function (req, res) {
+    var userID = req.body.userID;
+    let pool = mysql.createPool({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'yuedong'
+    });
+    pool.getConnection(function (err, connection) {
+    	var sql = 'select m.messageFrom,m.messageContent,m.messageTime,u.userName from message m,userInfo u where m.messageTo = u.userID and m.class="addFriend" and m.messageTo ='+userID;
+
+        connection.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+                res.send('5');//5数据库连接出错
+            } else {
+				res.send(result);
+            }
+        });
+        connection.release();
+    });
+});
+
 //聊天
 router.prepareSocketIO = function (server) {
     //存储所有在线用户
@@ -231,6 +255,22 @@ router.prepareSocketIO = function (server) {
             // console.log(target1)
             if (target1) {
                 target1.emit('addFriendReq', from, to, msg);
+                let pool = mysql.createPool({
+                    host: 'localhost',
+                    user: 'root',
+                    password: '',
+                    database: 'yuedong'
+                });
+                pool.getConnection(function (err, connection) {
+                    var sql = 'INSERT INTO message (messageFrom,messageTo,messageContent,messageTime,status,class) VALUES ("' + from + '","' + to + '","' + msg + '","' + method.getNowFormatDate() + '","已读","addFriend")';
+                    console.log(sql);
+                    connection.query(sql, function (err, result) {
+                        if (err) {
+                            throw err;
+                        }
+                        connection.release();
+                    });
+                })
             } else {
                 let pool = mysql.createPool({
                     host: 'localhost',
