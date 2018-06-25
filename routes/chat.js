@@ -183,6 +183,22 @@ router.prepareSocketIO = function (server) {
             //目标用户在线
             if (target) {
                 target.emit("pmsg", from, to, msg);
+                let pool = mysql.createPool({
+                    host: 'localhost',
+                    user: 'root',
+                    password: '',
+                    database: 'yuedong'
+                });
+                pool.getConnection(function (err, connection) {
+                    var sql = 'INSERT INTO message (messageFrom,messageTo,messageContent,messageTime,status,class) VALUES ("' + from + '","' + to + '","' + msg + '","' + method.getNowFormatDate1() + '","已读","message")';
+                    console.log(sql);
+                    connection.query(sql, function (err, result) {
+                        if (err) {
+                            throw err;
+                        }
+                        connection.release();
+                    });
+                })
            }
             //目标用户不在线
             else {
