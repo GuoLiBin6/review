@@ -143,11 +143,13 @@ router.prepareSocketIO = function (server) {
                 password: '',
                 database: 'yuedong'
             });
+            //未读
             pool.getConnection(function (err, connection) {
                 connection.query('select * from message where messageTo = "' + user + '" and status = "未读"', function (err, result) {
                     if (err) {
                         throw err;
                     } else {
+                    	console.log(result.length);
                         for (var i = 0; i < result.length; i++) {
                             if (result[i].class == 'addFriend') {
                                 arrAllSocket['用户' + user].emit('addFriendReq', result[i]);
@@ -192,7 +194,7 @@ router.prepareSocketIO = function (server) {
                     database: 'yuedong'
                 });
                 pool.getConnection(function (err, connection) {
-                    var sql = 'INSERT INTO message (messageFrom,messageTo,messageContent,messageTime,status,class) VALUES ("' + from + '","' + to + '","' + msg + '","' + method.getNowFormatDate() + '","未读","message")';
+                    var sql = 'INSERT INTO message (messageFrom,messageTo,messageContent,messageTime,status,class) VALUES ("' + from + '","' + to + '","' + msg + '","' + method.getNowFormatDate1() + '","未读","message")';
                     console.log(sql);
                     connection.query(sql, function (err, result) {
                         if (err) {
