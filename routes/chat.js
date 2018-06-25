@@ -128,7 +128,7 @@ router.post('/getFriendMessage', function (req, res) {
     });
 });
 
-//
+//通知
 router.post('/getaddFriendList', function (req, res) {
     var userID = req.body.userID;
     let pool = mysql.createPool({
@@ -138,7 +138,7 @@ router.post('/getaddFriendList', function (req, res) {
         database: 'yuedong'
     });
     pool.getConnection(function (err, connection) {
-    	var sql = 'select m.messageFrom,m.messageContent,m.messageTime,u.userName from message m,userInfo u where m.messageFrom = u.userID and m.class="addFriend" and m.messageTo ='+userID+' order by m.messageTime desc';
+    	var sql = 'select m.messageFrom,m.messageContent,m.messageTime,m.status,u.userName from message m,userInfo u where m.messageFrom = u.userID and m.class="addFriend" and m.messageTo ='+userID+' order by m.messageTime desc';
 
         connection.query(sql, function (err, result) {
             if (err) {
@@ -146,6 +146,29 @@ router.post('/getaddFriendList', function (req, res) {
                 res.send('5');//5数据库连接出错
             } else {
 				res.send(result);
+            }
+        });
+        connection.release();
+    });
+});
+//改变消息为已处理
+router.post('/changeStatus', function (req, res) {
+    var messageID = req.body.messageID;
+    let pool = mysql.createPool({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'yuedong'
+    });
+    pool.getConnection(function (err, connection) {
+    	var sql = 'update message set status = "已处理" where messageID = '+messageID;
+
+        connection.query(sql, function (err, result) {
+            if (err) {
+                throw err;
+                res.send('5');//5数据库连接出错
+            } else {
+				res.send('1');
             }
         });
         connection.release();
