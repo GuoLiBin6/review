@@ -119,6 +119,55 @@ router.post('/addAct', function (req, res) {
 
 
 });
+//我参加的活动
+//router.post('/getJoinAct',function(req,res){
+//	var userID = req.body.userID;
+//	let pool = mysql.createPool({
+//		host: 'localhost',
+//		user: 'root',
+//		password: '',
+//		database: 'yuedong'
+//	});
+//	pool.getConnection(function (err, connection) {
+////		var sql = 'select a.actName,a.actTime,a.actPlace,a.actNum,a.actLackNum,a.actCutOffTime,a.imgURL,a.actPrice,a.billingMethods,a.actExplain,a.actClass,a.actPeople from activity a,joinact j where j.userID = '+userID+' and j.actID = a.actID';
+//		var sql = 'select * from joinact'
+//		console.log(sql)
+//		connection.query(sql,function(result){
+//			if(err) throw err;
+//			else{
+//				res.send(result);
+//			}
+//		})
+//	})
+//})
+
+router.post('/getJoinAct', function (req, res) {
+	var userID = req.body.userID;
+	//定义数据库连接池
+	let pool = mysql.createPool({
+		host: 'localhost',
+		user: 'root',
+		password: '',
+		database: 'yuedong'
+	});
+	pool.getConnection(function (err, connection) {
+//		var sql = 'select * from joinact'
+		var sql = 'select a.actName,a.actTime,a.actPlace,a.actNum,a.actLackNum,a.actCutOffTime,a.imgURL,a.actPrice,a.billingMethods,a.actExplain,a.actClass,a.actPeople from activity a,joinact j where j.userID = '+userID+' and j.actID = a.actID';
+
+		connection.query(sql, function (err, result) {
+			if (err) {
+				throw err;
+				res.send('5');//5数据库连接出错
+			} else {
+				res.send(result);
+				return;
+			}
+			res.send('0');
+			return;
+		});
+		connection.release();
+	});
+});
 //报名活动
 router.post('/signUpAct', function (req, res) {
 	var actID = req.body.actID,
@@ -152,6 +201,9 @@ router.post('/signUpAct', function (req, res) {
 					
 					var sql = 'update activity set actLackNum=\''+newNum+'\',actPeople=\''+newPeople+'\' where actID = \''+actID+'\'';
 					console.log(sql)
+					connection.query('insert into joinAct (userID,actID) values('+userID+','+actID+')',function(err){
+						if(err) throw err;
+					})
 					connection.query(sql ,function(err,result){
 						if(err){
 							res.send('0');//报名失败
