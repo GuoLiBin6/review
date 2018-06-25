@@ -26,8 +26,12 @@ router.post('/searchFriend', function (req, res) {
                 throw err;
                 res.send('5');//5数据库连接出错
             } else {
-                res.send(result);
-                return;
+            	if(!result[0]){
+            		res.send('0')
+            	}else{
+            		res.send(result);
+            	}
+                
             }
         });
 
