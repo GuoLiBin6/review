@@ -138,7 +138,7 @@ router.post('/getaddFriendList', function (req, res) {
         database: 'yuedong'
     });
     pool.getConnection(function (err, connection) {
-    	var sql = 'select m.messageFrom,m.messageContent,m.messageTime,m.status,u.userName from message m,userInfo u where m.messageFrom = u.userID and m.class="addFriend" and m.messageTo ='+userID+' order by m.messageTime desc';
+    	var sql = 'select m.messageID,m.messageFrom,m.messageContent,m.messageTime,m.status,u.userName from message m,userInfo u where m.messageFrom = u.userID and m.class="addFriend" and m.messageTo ='+userID+' order by m.messageTime desc';
 
         connection.query(sql, function (err, result) {
             if (err) {
