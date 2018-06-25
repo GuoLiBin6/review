@@ -128,7 +128,7 @@ router.post('/getFriendMessage', function (req, res) {
     });
 });
 
-//获得好友聊天信息
+//
 router.post('/getaddFriendList', function (req, res) {
     var userID = req.body.userID;
     let pool = mysql.createPool({
@@ -138,7 +138,7 @@ router.post('/getaddFriendList', function (req, res) {
         database: 'yuedong'
     });
     pool.getConnection(function (err, connection) {
-    	var sql = 'select m.messageFrom,m.messageContent,m.messageTime,u.userName from message m,userInfo u where m.messageTo = u.userID and m.class="addFriend" and m.messageTo ='+userID;
+    	var sql = 'select m.messageFrom,m.messageContent,m.messageTime,u.userName from message m,userInfo u where m.messageFrom = u.userID and m.class="addFriend" and m.messageTo ='+userID+' order by m.messageTime desc';
 
         connection.query(sql, function (err, result) {
             if (err) {
@@ -262,7 +262,7 @@ router.prepareSocketIO = function (server) {
                     database: 'yuedong'
                 });
                 pool.getConnection(function (err, connection) {
-                    var sql = 'INSERT INTO message (messageFrom,messageTo,messageContent,messageTime,status,class) VALUES ("' + from + '","' + to + '","' + msg + '","' + method.getNowFormatDate() + '","已读","addFriend")';
+                    var sql = 'INSERT INTO message (messageFrom,messageTo,messageContent,messageTime,status,class) VALUES ("' + from + '","' + to + '","' + msg + '","' + method.getNowFormatDate1() + '","已读","addFriend")';
                     console.log(sql);
                     connection.query(sql, function (err, result) {
                         if (err) {
@@ -279,7 +279,7 @@ router.prepareSocketIO = function (server) {
                     database: 'yuedong'
                 });
                 pool.getConnection(function (err, connection) {
-                    var sql = 'INSERT INTO message (messageFrom,messageTo,messageContent,messageTime,status,class) VALUES ("' + from + '","' + to + '","' + msg + '","' + method.getNowFormatDate() + '","未读","addFriend")';
+                    var sql = 'INSERT INTO message (messageFrom,messageTo,messageContent,messageTime,status,class) VALUES ("' + from + '","' + to + '","' + msg + '","' + method.getNowFormatDate1() + '","未读","addFriend")';
                     console.log(sql);
                     connection.query(sql, function (err, result) {
                         if (err) {
@@ -304,7 +304,7 @@ router.prepareSocketIO = function (server) {
                     database: 'yuedong'
                 });
                 pool.getConnection(function (err, connection) {
-                    var sql = 'INSERT INTO message (messageFrom,messageTo,messageContent,messageTime,status,class) VALUES ("' + from + '","' + to + '","' + msg + '","' + method.getNowFormatDate() + '","未读","addRoom")';
+                    var sql = 'INSERT INTO message (messageFrom,messageTo,messageContent,messageTime,status,class) VALUES ("' + from + '","' + to + '","' + msg + '","' + method.getNowFormatDate1() + '","未读","addRoom")';
                     console.log(sql);
                     connection.query(sql, function (err, result) {
                         if (err) {
