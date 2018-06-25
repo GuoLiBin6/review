@@ -210,7 +210,7 @@ router.prepareSocketIO = function (server) {
                                 arrAllSocket['用户' + user].emit('addRoomReq', result[i]);
                             }
                         }
-                        connection.query('update message set status = "已读" where messageTo = "' + user + '"', function (err, result) {
+                        connection.query('update message set status = "已读" where messageTo = ' + user + ' and status = "未读"', function (err, result) {
                             if (err) throw err;
                         })
                     }
