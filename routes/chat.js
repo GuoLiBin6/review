@@ -110,7 +110,7 @@ router.post('/getFriendMessage', function (req, res) {
         database: 'yuedong'
     });
     pool.getConnection(function (err, connection) {
-    	var sql = 'select * from message where (messageFrom = ' + userID + ' and messageTo = ' + friendID + ') or (messageFrom = '+friendID+' and messageTo = '+userID+') order by messageTime desc';
+    	var sql = 'select * from message where (messageFrom = ' + userID + ' and messageTo = ' + friendID + ') or (messageFrom = '+friendID+' and messageTo = '+userID+')';
 
         connection.query(sql, function (err, result) {
             if (err) {
