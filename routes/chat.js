@@ -69,10 +69,11 @@ router.post('/getFriendList', function (req, res) {
                         resolve(friendArr);
                     })
                 p.then(function (friendArr) {
-                	if(friendArr == []){
+
+                	if(!friendArr[0]){
                 		res.send('0');
                 	}else{
-                		connection.query('select * from userInfo where userID in (' + friendArr + ')', function (err, result) {
+                		connection.query('select * from userInfo where userID in (' + friendArr+')', function (err, result) {
                         if (err) {
                             throw err;
                         } else {
