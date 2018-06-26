@@ -69,6 +69,7 @@ router.post('/addAct', function (req, res) {
 		actTime = req.body.actTime,
 		actPlace = req.body.actPlace,
 		actNum = req.body.actNum,
+		actLackNum = actNum -1,
 		actCutOffTime = req.body.actCutOffTime,
 		actPrice = req.body.actPrice,
 		billingMethods = req.body.billingMethods,
@@ -102,7 +103,7 @@ router.post('/addAct', function (req, res) {
 	}
   pool.getConnection(function (err, connection) {
         var sql = 'INSERT INTO activity (actName, actTime,actPlace,actNum,actLackNum,actCutOffTime,actStatus,imgURL,actPrice,billingMethods,actExplain,userID,actPeople,actClass)' 
-	+ 'VALUES ("' + actName + '","' + actTime + '","' + actPlace + '","' + actNum + '","' + actNum + '","' + actCutOffTime + '","' + actStatus + '","' + imgName + '","' + actPrice+ '","' + billingMethods+ '","' + actExplain+ '","' + userID+'","' + userID+'","' + actClass + '") ';
+	+ 'VALUES ("' + actName + '","' + actTime + '","' + actPlace + '","' + actNum + '","' + actLackNum + '","' + actCutOffTime + '","' + actStatus + '","' + imgName + '","' + actPrice+ '","' + billingMethods+ '","' + actExplain+ '","' + userID+'","' + userID+'","' + actClass + '") ';
         connection.query(sql, function (err, result) {
             if (err) {
                 throw err;
