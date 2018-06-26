@@ -203,6 +203,9 @@ router.post('/signUpAct', function (req, res) {
 					console.log(sql)
 					connection.query('insert into joinAct (userID,actID) values('+userID+','+actID+')',function(err){
 						if(err) throw err;
+						else{
+							console.log(userID+'报名'+actID);
+						}
 					})
 					connection.query(sql ,function(err,result){
 						if(err){
