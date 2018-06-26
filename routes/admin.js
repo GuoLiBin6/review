@@ -30,7 +30,7 @@ router.post('/addNewOption', function(req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send('1');
-				return;
+				
 			}
 		});
 
@@ -48,7 +48,7 @@ router.get('/getNewOption', function(req, res) {
 			} else {
 				
 				res.send(result);
-				return;
+				
 			}
 		});
 
@@ -68,7 +68,7 @@ router.post('/changePWD', function(req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send('1');
-				return;
+				
 			}
 		});
 
@@ -93,10 +93,10 @@ router.post('/adminUserAvatar',function(req,res,next){
                     if (err) {
                         throw err;
                         res.send('0');//修改失败
-                        return;
+                      
                     }else{
                         res.send('1');//修改成功
-                        return;
+                        
                     }
                 });
                 connection.release();
@@ -117,7 +117,7 @@ router.post('/rmAdministrator', function(req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send('1');
-				return;
+				
 			}
 		});
 
@@ -216,7 +216,7 @@ router.post('/changeVanue', function(req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send('1');
-				return;
+				
 			}
 		});
 
@@ -234,8 +234,7 @@ router.post('/rmVanue', function(req, res) {
 				if (err) {
 					throw err;
 					res.send('5');
-					return;//5数据库连接出错
-				}
+					
 			});
 		}
 		res.send('1');
@@ -264,7 +263,7 @@ router.post('/addVanue', function(req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send('1');
-				return;
+				
 			}
 		});
 
@@ -296,10 +295,10 @@ router.post('/addVanue1',function(req,res,next){
                     if (err) {
                         throw err;
                         res.send('0');//修改失败
-                        return;
+                        
                     }else{
                         res.send('1');//修改成功
-                        return;
+                       
                     }
                 });
                 connection.release();
@@ -373,7 +372,7 @@ router.post('/changeUser', function(req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send('1');
-				return;
+				
 			}
 		});
 
@@ -391,7 +390,7 @@ router.post('/rmUser', function(req, res) {
 				if (err) {
 					throw err;
 					res.send('5');
-					return;//5数据库连接出错
+				
 				}
 			});
 		}
@@ -452,7 +451,7 @@ router.post('/rmActivity', function(req, res) {
 				if (err) {
 					throw err;
 					res.send('5');
-					return;//5数据库连接出错
+					
 				}
 			});
 		}
@@ -482,7 +481,7 @@ router.post('/changeActivity', function(req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send('1');
-				return;
+			
 			}
 		});
 
@@ -542,7 +541,7 @@ router.post('/rmTopic', function(req, res) {
 				if (err) {
 					throw err;
 					res.send('5');
-					return;//5数据库连接出错
+				
 				}
 			});
 		}
@@ -572,10 +571,10 @@ router.post('/addTopic',function(req,res,next){
                     if (err) {
                         throw err;
                         res.send('0');//修改失败
-                        return;
+                      
                     }else{
                         res.send('1');//修改成功
-                        return;
+                       
                     }
                 });
                 connection.release();
