@@ -19,7 +19,7 @@ router.get('/', function (req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send(result);
-				
+				return;
 				}
 				res.send('0'); 
 				
@@ -139,7 +139,7 @@ router.post('/getJoinAct', function (req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send(result);
-				
+				return;
 			}
 			res.send('0');
 			
