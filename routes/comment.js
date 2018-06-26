@@ -13,7 +13,7 @@ router.post('/getComment', function (req, res) {
 		database: 'yuedong'
 	});
 	pool.getConnection(function (err, connection) {
-		connection.query('select u.avatar,u.userName,c.topicID,c.commentTime,c.content from comment c,userInfo u where c.topicID = "'+topicID+'" order by commentTime desc', function (err, result) {
+		connection.query('select u.avatar,u.userName,c.topicID,c.commentTime,c.content from comment c,userInfo u where c.topicID = "'+topicID+'" and c.userID = u.userID order by commentTime desc', function (err, result) {
 			if (err) {
 				throw err;
 				res.send('5');
@@ -56,7 +56,7 @@ router.post('/addComment', function (req, res) {
 				})
 				var userName = result[0].userName,
 					avatar = result[0].avatar;
-        		var sql = 'insert into comment (userName,topicID,commentTime,content,avatar) values("'+userName+'","'+topicID+'","'+commentTime+'","'+content+'","'+avatar+'")';
+        		var sql = 'insert into comment (userID,topicID,commentTime,content,avatar) values("'+userID+'","'+topicID+'","'+commentTime+'","'+content+'","'+avatar+'")';
 				connection.query(sql,function(err,result){
 					if(err) throw err;
 					else{
