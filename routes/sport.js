@@ -19,10 +19,10 @@ router.get('/', function (req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send(result);
-				return;
+				
 				}
 				res.send('0'); 
-				return;
+				
 			});
 			connection.release();
 	});
@@ -53,10 +53,10 @@ router.post('/getActList', function (req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send(result);
-				return;
+				
 			}
 			res.send('0');
-			return;
+			
 		});
 		connection.release();
 	});
@@ -102,15 +102,15 @@ router.post('/addAct', function (req, res) {
 	}
   pool.getConnection(function (err, connection) {
         var sql = 'INSERT INTO activity (actName, actTime,actPlace,actNum,actLackNum,actCutOffTime,actStatus,imgURL,actPrice,billingMethods,actExplain,userID,actPeople,actClass)' 
-	+ 'VALUES ("' + actName + '","' + actTime + '","' + actPlace + '","' + actNum + '","' + actNum + '","' + actCutOffTime + '","' + actStatus + '","' + imgName + '","' + actPrice+ '","' + billingMethods+ '","' + actExplain+ '","' + userID+'","' + '[]'+'","' + actClass + '") ';
+	+ 'VALUES ("' + actName + '","' + actTime + '","' + actPlace + '","' + actNum + '","' + actNum + '","' + actCutOffTime + '","' + actStatus + '","' + imgName + '","' + actPrice+ '","' + billingMethods+ '","' + actExplain+ '","' + userID+'","' + userID+'","' + actClass + '") ';
         connection.query(sql, function (err, result) {
             if (err) {
                 throw err;
                 res.send('0');//修改失败
-                return;
+                
             }else{
                 res.send('1');
-                return;
+                
             }
         });
         connection.release();
@@ -120,27 +120,6 @@ router.post('/addAct', function (req, res) {
 
 });
 //我参加的活动
-//router.post('/getJoinAct',function(req,res){
-//	var userID = req.body.userID;
-//	let pool = mysql.createPool({
-//		host: 'localhost',
-//		user: 'root',
-//		password: '',
-//		database: 'yuedong'
-//	});
-//	pool.getConnection(function (err, connection) {
-////		var sql = 'select a.actName,a.actTime,a.actPlace,a.actNum,a.actLackNum,a.actCutOffTime,a.imgURL,a.actPrice,a.billingMethods,a.actExplain,a.actClass,a.actPeople from activity a,joinact j where j.userID = '+userID+' and j.actID = a.actID';
-//		var sql = 'select * from joinact'
-//		console.log(sql)
-//		connection.query(sql,function(result){
-//			if(err) throw err;
-//			else{
-//				res.send(result);
-//			}
-//		})
-//	})
-//})
-
 router.post('/getJoinAct', function (req, res) {
 	var userID = req.body.userID;
 	//定义数据库连接池
@@ -160,10 +139,10 @@ router.post('/getJoinAct', function (req, res) {
 				res.send('5');//5数据库连接出错
 			} else {
 				res.send(result);
-				return;
+				
 			}
 			res.send('0');
-			return;
+			
 		});
 		connection.release();
 	});
@@ -192,7 +171,7 @@ router.post('/signUpAct', function (req, res) {
 				console.log( typeof result[0].actLackNum)
 				if(result[0].actLackNum == 0){
 					res.send('2')//活动人数报满
-					return;
+					
 				}else{
 					var newNum = result[0].actLackNum-1;
 					console.log(newNum)
@@ -211,10 +190,10 @@ router.post('/signUpAct', function (req, res) {
 						if(err){
 							res.send('0');//报名失败
 							throw err;
-							return;
+							
 						}else{
 							res.send('1');//报名成功
-							return;
+							
 						}
 					});
 				}
