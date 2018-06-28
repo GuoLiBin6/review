@@ -52,7 +52,7 @@ router.post('/getFriendList', function (req, res) {
         database: 'yuedong'
     });
     pool.getConnection(function (err, connection) {
-        connection.query('select * from friendShip where friendFrom = "' + userID + '" or friendTo = "' + userID + '"', function (err, result) {
+        connection.query('select * from friendShip where friendFrom = ' + userID + ' or friendTo = ' + userID, function (err, result) {
             if (err) {
                 throw err;
                 res.send('5');//5数据库连接出错
